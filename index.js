@@ -33,7 +33,11 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 app.use((req, res, next) => {
-  const corsWhiteList = ['https://blackraydev.github.io', 'https://localhost:5173'];
+  const corsWhiteList = [
+    'https://blackraydev.github.io',
+    'https://localhost:5173',
+    'http://localhost:5173',
+  ];
 
   if (corsWhiteList.includes(req.headers.origin)) {
     res.setHeader('Access-Control-Allow-Origin', req.headers.origin);
