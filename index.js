@@ -4,7 +4,11 @@ const { GoogleGenerativeAI, HarmCategory, HarmBlockThreshold } = require('@googl
 const app = express();
 
 const googleGenAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY);
-const geminiPro = googleGenAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
+const gemini = googleGenAI.getGenerativeModel({
+  model: 'gemini-1.5-flash',
+  systemInstruction:
+    'Ты блогер и твоя задача писать текст для постов на любую тему. Не забывай, что ты человек!',
+});
 
 const safetySettings = [
   {
@@ -40,31 +44,21 @@ app.use((req, res, next) => {
   next();
 });
 
-app.post('/askChatik', async (req, res) => {
+app.post('/getContent', async (req, res) => {
   try {
-    const { conversationId, userMessage } = req.body;
+    const { title, description } = req.body;
 
-    const messages = await Messages.findAll({ where: { conversationId } });
-    const history = messages.map((message) => ({
-      role: message.role,
-      parts: [{ text: message.text }],
-    }));
+    const prompt = `Тема: ${title}. Описание: ${description}`;
+    const result = await gemini.generateContentStream([prompt], { safetySettings });
 
-    const chat = geminiPro.startChat({ history, safetySettings });
-    const geminiResponse = await chat.sendMessageStream(userMessage.toString());
-
-    let botMessage = '';
-
-    for await (const chunk of geminiResponse.stream) {
+    for await (const chunk of result.stream) {
       const message = chunk.text();
-
-      botMessage += message;
       res.write(message);
     }
 
     res.end();
   } catch (e) {
-    console.log('POST AskChatik:', e.message);
+    console.log('POST getContent:', e.message);
     res.json('Something went wrong');
   }
 });
