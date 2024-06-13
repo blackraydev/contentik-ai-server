@@ -63,14 +63,16 @@ app.use((req, res, next) => {
 
 app.post('/getContent', async (req, res) => {
   try {
-    const { title, description } = req.body;
+    const { topic, description } = req.body;
 
-    const prompt = `Тема: ${title}. Описание: ${description}`;
+    const prompt = `Тема: ${topic}. Описание: ${description}`;
     const result = await gemini.generateContentStream({
       contents: [{ role: 'user', parts: [{ text: prompt }] }],
       generationConfig,
       safetySettings,
     });
+
+    console.log(result)
 
     for await (const chunk of result.stream) {
       const message = chunk.text();
