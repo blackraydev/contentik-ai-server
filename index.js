@@ -4,6 +4,11 @@ const { GoogleGenerativeAI, HarmCategory, HarmBlockThreshold } = require('@googl
 
 const app = express();
 
+const googleGenAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY);
+const gemini = googleGenAI.getGenerativeModel({
+  model: 'gemini-1.5-flash',
+});
+
 const safetySettings = [
   {
     category: HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT,
@@ -108,15 +113,12 @@ app.post('/getContent', upload.array('photos'), async (req, res) => {
       });
     };
 
-    const googleGenAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY);
-    const gemini = googleGenAI.getGenerativeModel({
-      model: 'gemini-1.5-flash',
+    const result = await gemini.generateContentStream({
+      contents: [{ role: 'user', parts: [{ text: getPrompt(), inlineData: getPhotos() }] }],
       generationConfig,
       safetySettings,
       systemInstruction: getSystemInstructions(mode),
     });
-
-    const result = await gemini.generateContentStream([getPrompt(), ...getPhotos()]);
 
     for await (const chunk of result.stream) {
       const message = chunk.text();
