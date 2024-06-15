@@ -114,7 +114,7 @@ app.post('/getContent', upload.array('photos'), async (req, res) => {
     };
 
     const result = await gemini.generateContentStream({
-      contents: [{ role: 'user', parts: [{ text: getPrompt(), inlineData: getPhotos() }] }],
+      contents: [{ role: 'user', parts: [{ text: getPrompt(), inlineData: getPhotos()?.[0] }] }],
       generationConfig,
       safetySettings,
       systemInstruction: getSystemInstructions(mode),
