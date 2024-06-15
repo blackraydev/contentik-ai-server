@@ -1,11 +1,12 @@
 const express = require('express');
+const multer = require('multer');
 const { GoogleGenerativeAI, HarmCategory, HarmBlockThreshold } = require('@google/generative-ai');
 
 const app = express();
 
 const googleGenAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY);
 const gemini = googleGenAI.getGenerativeModel({
-  model: 'gemini-1.5-pro',
+  model: 'gemini-1.5-flash',
 });
 
 const safetySettings = [
@@ -73,9 +74,12 @@ app.use((req, res, next) => {
   next();
 });
 
-app.post('/getContent', async (req, res) => {
+const upload = multer();
+
+app.post('/getContent', upload.array('photos'), async (req, res) => {
   try {
     const { mode, text, topic, description, style, tone, language } = req.body;
+    const photos = req.files;
 
     const getPrompt = () => {
       let prompt;
@@ -99,8 +103,18 @@ app.post('/getContent', async (req, res) => {
       return prompt;
     };
 
+    const getPhotos = () => {
+      return photos.map(({ buffer, mimeType }) => {
+        const base64 = buffer.toString('base64');
+        return {
+          data: base64,
+          mimeType,
+        };
+      });
+    };
+
     const result = await gemini.generateContentStream({
-      contents: [{ role: 'user', parts: [{ text: getPrompt() }] }],
+      contents: [{ role: 'user', parts: [{ text: getPrompt(), inlineData: getPhotos() }] }],
       generationConfig,
       safetySettings,
       systemInstruction: getSystemInstructions(mode),
