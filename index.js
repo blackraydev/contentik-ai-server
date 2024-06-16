@@ -112,7 +112,7 @@ app.post('/getContent', upload.array('photos'), async (req, res) => {
       });
     };
 
-    console.log(photos);
+    console.log(getPhotos());
 
     const gemini = googleGenAI.getGenerativeModel({
       model: 'gemini-1.5-flash-latest',
@@ -121,7 +121,7 @@ app.post('/getContent', upload.array('photos'), async (req, res) => {
       systemInstruction: getSystemInstructions(mode),
     });
 
-    const result = await gemini.generateContentStream(getPrompt(), ...getPhotos());
+    const result = await gemini.generateContentStream([getPrompt(), ...getPhotos()]);
 
     for await (const chunk of result.stream) {
       const message = chunk.text();
