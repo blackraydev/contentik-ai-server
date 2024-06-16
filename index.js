@@ -101,12 +101,12 @@ app.post('/getContent', upload.array('photos'), async (req, res) => {
     };
 
     const getPhotos = () => {
-      return photos.map(({ buffer, mimeType }) => {
+      return photos.map(({ buffer, mimetype }) => {
         const base64 = buffer.toString('base64');
         return {
           inlineData: {
             data: base64,
-            mimeType,
+            mimeType: mimetype,
           },
         };
       });
