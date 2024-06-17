@@ -128,13 +128,13 @@ app.post('/getContent', upload.array('photos'), async (req, res) => {
 
     const result = await gemini.generateContentStream([getPrompt(), ...getPhotos()]);
 
-    console.log('Метадата:');
-    console.log((await result.response).usageMetadata);
-
     for await (const chunk of result.stream) {
       const message = chunk.text();
       res.write(message);
     }
+
+    console.log('Метадата:');
+    console.log(await result.response);
 
     res.end();
   } catch (e) {
