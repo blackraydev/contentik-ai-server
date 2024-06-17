@@ -75,18 +75,25 @@ const upload = multer();
 
 app.post('/getContent', upload.array('photos'), async (req, res) => {
   try {
-    const { mode, text, topic, description, style, tone, language } = req.body;
+    const { mode, text, topic, description, keywords, style, tone, language } = req.body;
     const photos = req.files;
 
     const getPrompt = () => {
       let prompt;
 
       if (mode === 'create') {
-        prompt = `Тема: ${topic}. Описание: ${description}`;
+        prompt = `Тема: ${topic}`;
+
+        if (description) {
+          prompt += `. Описание: ${description}`;
+        }
       } else if (mode === 'edit') {
         prompt = `Текст: ${text}`;
       }
 
+      if (keywords) {
+        prompt += `. Ключевые слова, которые необходимо использовать в тексте: ${keywords}`;
+      }
       if (style) {
         prompt += `. Стиль написания: ${style}`;
       }
@@ -112,8 +119,6 @@ app.post('/getContent', upload.array('photos'), async (req, res) => {
       });
     };
 
-    console.log(getPhotos());
-
     const gemini = googleGenAI.getGenerativeModel({
       model: 'gemini-1.5-flash-latest',
       generationConfig,
@@ -122,6 +127,9 @@ app.post('/getContent', upload.array('photos'), async (req, res) => {
     });
 
     const result = await gemini.generateContentStream([getPrompt(), ...getPhotos()]);
+
+    console.log('Метадата:');
+    console.log((await result.response).usageMetadata);
 
     for await (const chunk of result.stream) {
       const message = chunk.text();
