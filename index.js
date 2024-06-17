@@ -133,9 +133,6 @@ app.post('/getContent', upload.array('photos'), async (req, res) => {
       res.write(message);
     }
 
-    console.log('Метадата:');
-    console.log(await result.response);
-
     res.end();
   } catch (e) {
     console.log('POST getContent:', e.message);
