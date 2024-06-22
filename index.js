@@ -1,7 +1,9 @@
 const express = require('express');
 const multer = require('multer');
+const { createClient } = require('@supabase/supabase-js');
 const { GoogleGenerativeAI, HarmCategory, HarmBlockThreshold } = require('@google/generative-ai');
 
+const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 const googleGenAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY);
 
 const app = express();
@@ -127,10 +129,20 @@ app.post('/getContent', upload.array('photos'), async (req, res) => {
     });
 
     const result = await gemini.generateContentStream([getPrompt(), ...getPhotos()]);
+    let content = '';
 
     for await (const chunk of result.stream) {
       const message = chunk.text();
+      content += message;
       res.write(message);
+    }
+
+    const { error } = await supabase
+      .from('generations')
+      .insert([{ mode, topic, description, keywords, style, tone, language, content }]);
+
+    if (error) {
+      throw error;
     }
 
     res.end();
