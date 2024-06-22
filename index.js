@@ -137,8 +137,6 @@ app.post('/getContent', upload.array('photos'), async (req, res) => {
       res.write(message);
     }
 
-    console.log(mode, topic, description, keywords, style, tone, language, content, userId);
-
     const { error } = await supabase
       .from('generations')
       .insert([{ mode, topic, description, keywords, style, tone, language, content, userId }]);
