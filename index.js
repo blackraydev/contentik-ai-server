@@ -77,7 +77,7 @@ const upload = multer();
 
 app.post('/getContent', upload.array('photos'), async (req, res) => {
   try {
-    const { mode, text, topic, description, keywords, style, tone, language } = req.body;
+    const { mode, text, topic, description, keywords, style, tone, language, userId } = req.body;
     const photos = req.files;
 
     const getPrompt = () => {
@@ -137,9 +137,11 @@ app.post('/getContent', upload.array('photos'), async (req, res) => {
       res.write(message);
     }
 
+    console.log(mode, topic, description, keywords, style, tone, language, content, userId);
+
     const { error } = await supabase
       .from('generations')
-      .insert([{ mode, topic, description, keywords, style, tone, language, content }]);
+      .insert([{ mode, topic, description, keywords, style, tone, language, content, userId }]);
 
     if (error) {
       throw error;
