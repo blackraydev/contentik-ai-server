@@ -1,5 +1,4 @@
 const express = require('express');
-const multer = require('multer');
 const { createClient } = require('@supabase/supabase-js');
 const { GoogleGenerativeAI, HarmCategory, HarmBlockThreshold } = require('@google/generative-ai');
 
@@ -39,7 +38,7 @@ const getSystemInstructions = (mode) => {
   if (mode === 'create') {
     result = 'писать текст для постов на заданную тему с определенным описанием! \n';
   } else if (mode === 'edit') {
-    result = 'отредактировать текст существующего поста по заданным инструкциям! \n';
+    result = 'отредактировать текст по заданным инструкциям! \n';
   }
 
   return (
@@ -73,12 +72,9 @@ app.use((req, res, next) => {
   next();
 });
 
-const upload = multer();
-
-app.post('/createText', upload.array('photos'), async (req, res) => {
+app.post('/getContent', async (req, res) => {
   try {
     const { mode, text, topic, description, keywords, style, tone, language, userId } = req.body;
-    const photos = req.files;
 
     const getPrompt = () => {
       let prompt;
@@ -93,28 +89,16 @@ app.post('/createText', upload.array('photos'), async (req, res) => {
         prompt += `. Ключевые слова, которые необходимо использовать в тексте: ${keywords}`;
       }
       if (style) {
-        prompt += `. Стиль написания: ${style}`;
+        prompt += `. Стиль написания текста: ${style}`;
       }
       if (tone) {
-        prompt += `. Тон: ${tone}`;
+        prompt += `. Тональность текста: ${tone}`;
       }
       if (language) {
-        prompt += `. Язык: ${language}`;
+        prompt += `. Язык генерации: ${language}`;
       }
 
       return prompt;
-    };
-
-    const getPhotos = () => {
-      return photos.map(({ buffer, mimetype }) => {
-        const base64 = buffer.toString('base64');
-        return {
-          inlineData: {
-            data: base64,
-            mimeType: mimetype,
-          },
-        };
-      });
     };
 
     const gemini = googleGenAI.getGenerativeModel({
@@ -124,7 +108,7 @@ app.post('/createText', upload.array('photos'), async (req, res) => {
       systemInstruction: getSystemInstructions(mode),
     });
 
-    const result = await gemini.generateContentStream([getPrompt(), ...getPhotos()]);
+    const result = await gemini.generateContentStream([getPrompt()]);
     let content = '';
 
     for await (const chunk of result.stream) {
@@ -135,7 +119,9 @@ app.post('/createText', upload.array('photos'), async (req, res) => {
 
     const { error } = await supabase
       .from('generations')
-      .insert([{ mode, topic, description, keywords, style, tone, language, content, userId }]);
+      .insert([
+        { mode, topic, description, text, keywords, style, tone, language, content, userId },
+      ]);
 
     if (error) {
       throw error;
