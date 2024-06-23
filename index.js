@@ -148,12 +148,42 @@ app.post('/createText', upload.array('photos'), async (req, res) => {
   }
 });
 
-app.post('/editText', async (req, res) => {
+app.post('/analyzeOptimization', async (req, res) => {
   try {
     const { text } = req.body;
 
     const getPrompt = () => {
       return `Детально проанализируй текст на предмет SEO-оптимизации, включая проверку на наличие ключевых слов, их плотность, читабельность текста, длину предложений и абзацев: \n ${text}`;
+    };
+
+    const gemini = googleGenAI.getGenerativeModel({
+      model: 'gemini-1.5-flash-latest',
+      generationConfig,
+      safetySettings,
+    });
+
+    const result = await gemini.generateContentStream([getPrompt()]);
+    let content = '';
+
+    for await (const chunk of result.stream) {
+      const message = chunk.text();
+      content += message;
+      res.write(message);
+    }
+
+    res.end();
+  } catch (e) {
+    console.log('POST getContent:', e.message);
+    res.json('Something went wrong');
+  }
+});
+
+app.post('/analyzeTonality', async (req, res) => {
+  try {
+    const { text } = req.body;
+
+    const getPrompt = () => {
+      return `Детально проанализируй тональность текста и определи эмоциональную окраску: \n ${text}`;
     };
 
     const gemini = googleGenAI.getGenerativeModel({
