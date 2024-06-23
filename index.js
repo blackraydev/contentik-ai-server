@@ -75,7 +75,7 @@ app.use((req, res, next) => {
 
 const upload = multer();
 
-app.post('/getContent', upload.array('photos'), async (req, res) => {
+app.post('/createText', upload.array('photos'), async (req, res) => {
   try {
     const { mode, text, topic, description, keywords, style, tone, language, userId } = req.body;
     const photos = req.files;
@@ -84,11 +84,7 @@ app.post('/getContent', upload.array('photos'), async (req, res) => {
       let prompt;
 
       if (mode === 'create') {
-        prompt = `Тема: ${topic}`;
-
-        if (description) {
-          prompt += `. Описание: ${description}`;
-        }
+        prompt = `Тема: ${topic}. Описание: ${description}`;
       } else if (mode === 'edit') {
         prompt = `Текст: ${text}`;
       }
@@ -143,6 +139,36 @@ app.post('/getContent', upload.array('photos'), async (req, res) => {
 
     if (error) {
       throw error;
+    }
+
+    res.end();
+  } catch (e) {
+    console.log('POST getContent:', e.message);
+    res.json('Something went wrong');
+  }
+});
+
+app.post('/editText', async (req, res) => {
+  try {
+    const { text } = req.body;
+
+    const getPrompt = () => {
+      return `Детально проанализируй текст на предмет SEO-оптимизации, включая проверку на наличие ключевых слов, их плотность, читабельность текста, длину предложений и абзацев: \n ${text}`;
+    };
+
+    const gemini = googleGenAI.getGenerativeModel({
+      model: 'gemini-1.5-flash-latest',
+      generationConfig,
+      safetySettings,
+    });
+
+    const result = await gemini.generateContentStream([getPrompt()]);
+    let content = '';
+
+    for await (const chunk of result.stream) {
+      const message = chunk.text();
+      content += message;
+      res.write(message);
     }
 
     res.end();
