@@ -74,28 +74,49 @@ app.use((req, res, next) => {
 
 app.post('/getContent', async (req, res) => {
   try {
-    const { mode, text, topic, description, keywords, style, tone, language, userId } = req.body;
+    const {
+      mode,
+      text,
+      topic,
+      contentType,
+      targetAudience,
+      description,
+      keywords,
+      style,
+      tone,
+      language,
+      userId,
+    } = req.body;
 
     const getPrompt = () => {
       let prompt;
 
       if (mode === 'create') {
-        prompt = `Тема: ${topic}. Описание: ${description}`;
+        prompt = `Тема: ${topic}.`;
       } else if (mode === 'edit') {
-        prompt = `Текст: ${text}`;
+        prompt = `Текст: ${text}.`;
       }
 
+      if (contentType) {
+        prompt += `Тип контента: ${contentType}.`;
+      }
+      if (targetAudience) {
+        prompt += `Целевая аудитория: ${targetAudience}.`;
+      }
+      if (description) {
+        prompt += `Описание: ${description}.`;
+      }
       if (keywords) {
-        prompt += `. Ключевые слова, которые необходимо использовать в тексте: ${keywords}`;
+        prompt += `Ключевые слова: ${keywords}.`;
       }
       if (style) {
-        prompt += `. Стиль написания текста: ${style}`;
+        prompt += `Стиль написания текста: ${style}.`;
       }
       if (tone) {
-        prompt += `. Тональность текста: ${tone}`;
+        prompt += `Тональность текста: ${tone}.`;
       }
       if (language) {
-        prompt += `. Язык генерации: ${language}`;
+        prompt += `Язык генерации: ${language}.`;
       }
 
       return prompt;
@@ -105,7 +126,7 @@ app.post('/getContent', async (req, res) => {
       model: 'gemini-1.5-flash-latest',
       generationConfig,
       safetySettings,
-      systemInstruction: getSystemInstructions(mode),
+      // systemInstruction: getSystemInstructions(mode),
     });
 
     const result = await gemini.generateContentStream([getPrompt()]);
