@@ -9,10 +9,11 @@ module.exports = (sequelize) => {
       allowNull: false,
       unique: true,
     },
-    token: {
-      type: DataTypes.STRING,
+    refreshToken: {
+      type: DataTypes.STRING(500),
       allowNull: false,
     },
   });
+
   return Token;
 };

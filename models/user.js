@@ -18,6 +18,15 @@ module.exports = (sequelize) => {
       type: DataTypes.STRING,
       allowNull: false,
     },
+    isActivated: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: false,
+    },
+    activationLink: {
+      type: DataTypes.STRING,
+    },
   });
+
   return User;
 };
