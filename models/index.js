@@ -1,4 +1,4 @@
-const { Sequelize } = require('sequelize');
+const { Sequelize, Op } = require('sequelize');
 const sequelize = new Sequelize('postgres', 'postgres', '', {
   host: 'localhost',
   dialect: 'postgres',
@@ -8,12 +8,15 @@ const sequelize = new Sequelize('postgres', 'postgres', '', {
 const User = require('./user')(sequelize);
 const Token = require('./token')(sequelize);
 const Content = require('./content')(sequelize);
+const Tariff = require('./tariff')(sequelize);
 
-User.hasMany(Token, { onDelete: 'CASCADE' });
-User.hasMany(Content, { onDelete: 'CASCADE' });
+User.hasMany(Token, { foreignKey: 'userId', onDelete: 'CASCADE' });
+User.hasMany(Content, { foreignKey: 'userId', onDelete: 'CASCADE' });
+User.hasOne(Tariff, { foreignKey: 'userId', onDelete: 'CASCADE' });
 
-Token.belongsTo(User);
-Content.belongsTo(User);
+Token.belongsTo(User, { foreignKey: 'userId' });
+Content.belongsTo(User, { foreignKey: 'userId' });
+Tariff.belongsTo(User, { foreignKey: 'userId' });
 
 sequelize
   .sync()
@@ -25,4 +28,5 @@ module.exports = {
   User,
   Token,
   Content,
+  Tariff,
 };

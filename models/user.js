@@ -16,7 +16,6 @@ module.exports = (sequelize) => {
     },
     password: {
       type: DataTypes.STRING,
-      allowNull: false,
     },
     isActivated: {
       type: DataTypes.BOOLEAN,
@@ -24,6 +23,24 @@ module.exports = (sequelize) => {
       defaultValue: false,
     },
     activationLink: {
+      type: DataTypes.STRING,
+    },
+    vkUserId: {
+      type: DataTypes.BIGINT,
+    },
+    yandexUserId: {
+      type: DataTypes.STRING,
+    },
+    firstName: {
+      type: DataTypes.STRING,
+    },
+    lastName: {
+      type: DataTypes.STRING,
+    },
+    avatar: {
+      type: DataTypes.STRING,
+    },
+    birthday: {
       type: DataTypes.STRING,
     },
   });

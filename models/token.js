@@ -10,7 +10,7 @@ module.exports = (sequelize) => {
       unique: true,
     },
     refreshToken: {
-      type: DataTypes.STRING(500),
+      type: DataTypes.STRING(2000),
       allowNull: false,
     },
   });

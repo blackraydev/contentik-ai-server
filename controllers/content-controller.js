@@ -1,12 +1,15 @@
 const contentService = require('../services/content-service');
+const tariffService = require('../services/tariff-service');
 
 class ContentController {
   async generateContent(req, res, next) {
     try {
       const { id: userId } = req.user;
       const contentProps = req.body;
-      const contentStream = await contentService.generateContent(contentProps);
 
+      await tariffService.useTariff(userId, contentProps.mode);
+
+      const contentStream = await contentService.generateContent(contentProps);
       let resultContent = '';
 
       for await (const chunk of contentStream) {
@@ -19,7 +22,7 @@ class ContentController {
       await contentService.saveContent({
         ...contentProps,
         content: resultContent,
-        UserId: userId,
+        userId,
       });
 
       return res.end();

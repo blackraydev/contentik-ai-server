@@ -18,7 +18,7 @@ class ContentService {
   }
 
   async getContents(userId) {
-    const contents = await Content.findAll({ where: { UserId: userId } });
+    const contents = await Content.findAll({ where: { userId } });
     return contents;
   }
 
@@ -61,7 +61,7 @@ class ContentService {
         prompt += `Стиль написания текста: ${style}.`;
       }
       if (tone) {
-        prompt += `Тональность текста: ${tone}.`;
+        prompt += `Тон текста: ${tone}.`;
       }
       if (language) {
         prompt += `Язык генерации: ${language}.`;
