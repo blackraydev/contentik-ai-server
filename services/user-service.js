@@ -21,7 +21,7 @@ class UserService {
 
     await mailService.sendActivationMail(
       email,
-      `${process.env.API_URL}/api/activate/${activationLink}`,
+      `${process.env.API_URL}/activate/${activationLink}`,
     );
 
     const userDto = new UserDto(user);
@@ -114,7 +114,7 @@ class UserService {
 
     await mailService.sendActivationMail(
       user.email,
-      `${process.env.API_URL}/api/activate/${user.activationLink}`,
+      `${process.env.API_URL}/activate/${user.activationLink}`,
     );
 
     return;
@@ -131,7 +131,7 @@ class UserService {
 
     await mailService.sendResetPasswordMail(
       user.email,
-      `${process.env.CLIENT_URL}app/reset?resetToken=${resetToken}&email=${user.email}`,
+      `${process.env.CLIENT_URL}/reset?resetToken=${resetToken}&email=${user.email}`,
     );
 
     return;
