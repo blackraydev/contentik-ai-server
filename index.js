@@ -1,4 +1,7 @@
 require('dotenv').config();
+
+const http = require('http');
+const https = require('https');
 const express = require('express');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
@@ -9,7 +12,16 @@ const errorMiddleware = require('./middlewares/error-middleware');
 const { scheduleTariffSubscriptionCheckoutCron } = require('./crons/tariff-cron');
 
 const app = express();
-const port = process.env.PORT || 3000;
+
+const privateKey = fs.readFileSync('/etc/ssl/domainssl/contentik-ai.ru/privkey.pem', 'utf8');
+const certificate = fs.readFileSync('/etc/ssl/domainssl/contentik-ai.ru/cert.pem', 'utf8');
+const ca = fs.readFileSync('/etc/ssl/domainssl/contentik-ai.ru/chain.pem', 'utf8');
+
+const credentials = {
+  key: privateKey,
+  cert: certificate,
+  ca: ca,
+};
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
@@ -39,14 +51,16 @@ app.use((req, res, next) => {
 app.use('/api', router);
 app.use(errorMiddleware);
 
-const start = async () => {
-  try {
-    await sequelize.authenticate();
-    app.listen(port, () => console.log(`Server running on port ${port}`));
-    scheduleTariffSubscriptionCheckoutCron();
-  } catch (e) {
-    console.log(e);
-  }
-};
+// Starting both http & https servers
+const httpServer = http.createServer(app);
+const httpsServer = https.createServer(credentials, app);
 
-start();
+httpServer.listen(80, () => {
+  console.log('HTTP Server running on port 80');
+});
+
+httpsServer.listen(443, async () => {
+  await sequelize.authenticate();
+  scheduleTariffSubscriptionCheckoutCron();
+  console.log('HTTPS Server running on port 443');
+});
