@@ -12,6 +12,8 @@ const router = require('./router');
 const errorMiddleware = require('./middlewares/error-middleware');
 const { scheduleTariffSubscriptionCheckoutCron } = require('./crons/tariff-cron');
 
+const HTTP_PORT = process.env.HTTP_PORT || 8080;
+const HTTPS_PORT = process.env.HTTPS_PORT || 4443;
 const app = express();
 
 const privateKey = fs.readFileSync('/etc/ssl/domainssl/contentik-ai.ru/privkey.pem', 'utf8');
@@ -56,12 +58,12 @@ app.use(errorMiddleware);
 const httpServer = http.createServer(app);
 const httpsServer = https.createServer(credentials, app);
 
-httpServer.listen(8080, () => {
-  console.log('HTTP Server running on port 8080');
+httpServer.listen(HTTP_PORT, () => {
+  console.log(`HTTP Server running on port ${HTTP_PORT}`);
 });
 
-httpsServer.listen(4443, async () => {
+httpsServer.listen(HTTPS_PORT, async () => {
   await sequelize.authenticate();
   scheduleTariffSubscriptionCheckoutCron();
-  console.log('HTTPS Server running on port 4443');
+  console.log(`HTTPS Server running on port ${HTTPS_PORT}`);
 });
