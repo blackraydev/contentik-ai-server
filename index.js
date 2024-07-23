@@ -16,9 +16,9 @@ const HTTP_PORT = process.env.HTTP_PORT || 8080;
 const HTTPS_PORT = process.env.HTTPS_PORT || 4443;
 const app = express();
 
-const privateKey = fs.readFileSync('/etc/ssl/domainssl/contentik-ai.ru/privkey.pem', 'utf8');
-const certificate = fs.readFileSync('/etc/ssl/domainssl/contentik-ai.ru/cert.pem', 'utf8');
-const ca = fs.readFileSync('/etc/ssl/domainssl/contentik-ai.ru/chain.pem', 'utf8');
+const privateKey = fs.readFileSync('/etc/ssl/contentik/contentik.key', 'utf8');
+const certificate = fs.readFileSync('/etc/ssl/contentik/contentik.crt', 'utf8');
+const ca = fs.readFileSync('/etc/ssl/contentik/ca.crt', 'utf8');
 
 const credentials = {
   key: privateKey,
@@ -31,13 +31,7 @@ app.use(express.json());
 app.use(bodyParser.json());
 app.use(cookieParser());
 app.use((req, res, next) => {
-  const corsWhiteList = [
-    'https://contentik-ai.ru',
-    'https://blackraydev.github.io',
-    'https://localhost',
-    'https://localhost:5173',
-    'http://localhost:5173',
-  ];
+  const corsWhiteList = ['https://contentik-ai.ru'];
 
   if (corsWhiteList.includes(req.headers.origin)) {
     res.setHeader('Access-Control-Allow-Origin', req.headers.origin);
