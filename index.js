@@ -56,12 +56,12 @@ app.use(errorMiddleware);
 const httpServer = http.createServer(app);
 const httpsServer = https.createServer(credentials, app);
 
-httpServer.listen(80, () => {
-  console.log('HTTP Server running on port 80');
+httpServer.listen(8080, () => {
+  console.log('HTTP Server running on port 8080');
 });
 
-httpsServer.listen(443, async () => {
+httpsServer.listen(4443, async () => {
   await sequelize.authenticate();
   scheduleTariffSubscriptionCheckoutCron();
-  console.log('HTTPS Server running on port 443');
+  console.log('HTTPS Server running on port 4443');
 });
