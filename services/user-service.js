@@ -171,7 +171,7 @@ class UserService {
       {
         client_id: process.env.VK_CLIENT_ID,
         client_secret: process.env.VK_CLIENT_SECRET,
-        redirect_uri: 'https://localhost',
+        redirect_uri: 'https://contentik-ai.ru/app',
         code: code,
         code_verifier: 'FGH767Gd65',
         grant_type: 'authorization_code',
@@ -182,7 +182,7 @@ class UserService {
         params: {
           client_id: process.env.VK_CLIENT_ID,
           client_secret: process.env.VK_CLIENT_SECRET,
-          redirect_uri: 'https://localhost',
+          redirect_uri: 'https://contentik-ai.ru/app',
           code: code,
           code_verifier: 'FGH767Gd65',
           grant_type: 'authorization_code',
@@ -321,7 +321,7 @@ class UserService {
         code: code,
         client_id: process.env.YANDEX_CLIENT_ID,
         client_secret: process.env.YANDEX_CLIENT_SECRET,
-        redirect_uri: 'https://localhost/contentik-ai/app/auth',
+        redirect_uri: 'https://contentik-ai.ru/app',
       },
       {
         headers: {
