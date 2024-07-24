@@ -359,7 +359,7 @@ class UserService {
     });
 
     if (!isCreated) {
-      user.yandexUserId = vkUserId;
+      user.yandexUserId = yandexUserId;
       user.firstName = firstName;
       user.lastName = lastName;
       user.avatar = `https://avatars.yandex.net/get-yapic/${avatarId}/islands-middle`;
