@@ -199,8 +199,9 @@ class TariffService {
           console.log('Subscription cancelled');
 
           await tariff.save();
+        // TODO: Возможно нужно убрать else
         } else {
-          console.log('Subscription payed');
+          console.log('Subscription payed manually');
           await this.purchaseTariff(tariff.userId, tariff.plan, paymentMethodId);
         }
       }

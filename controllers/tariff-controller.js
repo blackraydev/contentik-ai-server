@@ -33,15 +33,15 @@ class TariffController {
         payment_method: { id: paymentMethodId, saved: isPaymentMethodSaved },
       } = object;
 
-      console.log(req);
+      console.log('Automatic paying', new Date());
 
       if (event === 'payment.succeeded') {
-        console.log(req.body);
         await tariffService.purchaseTariff(
           userId,
           newPlan,
           isPaymentMethodSaved ? paymentMethodId : null,
         );
+        console.log('Automatic paying successfully', new Date());
       }
 
       return res.status(200).end();
