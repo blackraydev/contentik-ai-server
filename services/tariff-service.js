@@ -158,7 +158,7 @@ class TariffService {
         const { value, description } = getTariffDetails(tariff.plan, true);
 
         // Если отключено автопродление = подписка просрочена и ограничена
-        if (!tariff.paymentMethodId) {
+        if (!tariff.paymentMethodId && !tariff.isExpired) {
           tariff.isExpired = true;
 
           console.log('Subscription cancelled');
