@@ -1,6 +1,7 @@
 const contentService = require('../services/content-service');
 const tariffService = require('../services/tariff-service');
 
+// TODO: Добавить валидацию на длину текста параметров
 class ContentController {
   async generateContent(req, res, next) {
     try {

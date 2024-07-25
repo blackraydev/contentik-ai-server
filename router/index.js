@@ -40,7 +40,6 @@ router.post('/getContents', authMiddleware, contentController.getContents);
 router.post('/deleteContent', authMiddleware, contentController.deleteContent);
 
 router.get('/tariff', authMiddleware, tariffController.getTariff);
-router.post('/purchaseTariff', authMiddleware, tariffController.purchaseTariff);
 router.post('/checkoutTariff', authMiddleware, tariffController.checkoutTariff);
 router.post('/tariffWebhook', tariffController.tariffWebhook);
 router.post(

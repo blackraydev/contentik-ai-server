@@ -17,67 +17,22 @@ class MailService {
     await this.transporter.sendMail({
       from: process.env.SMTP_USER,
       to,
-      subject: 'Contentik | Подтверждение регистрации',
+      subject: 'Contentik AI | Подтверждение регистрации',
       text: '',
       html: `
         <html>
           <head>
-            <link rel="preconnect" href="https://fonts.googleapis.com" />
-            <link rel="preconnect" href="https://fonts.gstatic.com" />
-            <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600&display=swap" rel="stylesheet" />
-            <meta name="color-scheme" content="light dark"> <meta name="supported-color-schemes" content="light dark"> 
+            <meta name="viewport" content="width=device-width, initial-scale=1.0" />
           </head>
-          <style>
-            :root {
-              color-scheme: light dark;
-              supported-color-schemes: light dark;
-            }
-
-            .activateButton {
-              background: #000000 !important;
-              color: #FFFFFF !important;
-              padding: 10px;
-              border-radius: 10px;
-              outline: none;
-              border: none;
-              cursor: pointer;
-            }
-
-            @media (prefers-color-scheme: dark) {
-              .activateButton.dark {
-                background: #FFFFFF !important;
-                color: #000000 !important;
-                padding: 10px;
-                border-radius: 10px;
-                outline: none;
-                border: none;
-                cursor: pointer;
-              }
-
-              h1,
-              h2,
-              p,
-              span,
-              a,
-              b {
-                color: #ffffff !important;
-              }
-            }
-          </style>
-          <body style="background-color: rgb(16, 16, 18); color: rgb(255, 255, 255); font-family: 'Rubik', sans-serif !important; padding: 50px">
-            <div style="display: flex; align-items: center; justify-content: center; flex-direction: column; width: 100%">
-              <div style="display: flex; align-items: center; gap: 15px; width: 100%; margin-bottom: 15px">
-                <img width="30" height="30" src="https://blackraydev.github.io/contentik-ai-landing/img/logo.png">
-                <h2>Contentik</h2>
+          <body style="color: #ffffff; font-family: Arial, sans-serif; margin: 0;">
+            <div style="background-color: #101012; border-radius: 30px; padding: 25px; text-align: center; max-width: 600px; margin: 0 auto;">
+              <div style="display: flex; justify-content: center; margin-bottom: 15px;">
+                <img src="https://contentik-ai.ru/img/logo.png" alt="Contentik AI Logo" width="24" height="24" style="display: block; background: #24242A; padding: 8px; border-radius: 10px;">
+                <h2 style="margin: 0; color: #ffffff; margin-left: 10px; margin-top: 7px;">Contentik AI</h2>
               </div>
-
-              <p style="font-size: 12px; text-align: center">Нажмите на эту кнопку - и ваша почта будет подтверждена</p>
-              <a href="${link}" style="margin-bottom: 20px; border-radius: 10px; outline: none; border: none; text-decoration: none">
-                <button class="activateButton dark">Подтвердить почту</button>
-              </a>
-
-              <p style="color: rgb(150, 150, 165); font-size: 10px; text-align: center">Если вы не регистрировались в сервисе Contentik, просто
-                удалите это письмо.</p>
+              <p style="font-size: 14px; font-weight: 500; text-align: center; color: #ffffff;">Нажмите на эту кнопку - и ваша почта будет подтверждена</p>
+              <a href="${link}" style="display: inline-block; background: #FFFFFF; color: #000000; font-size: 14px; padding: 10px 15px; border-radius: 10px; text-decoration: none; margin-bottom: 20px;">Подтвердить почту</a>
+              <p style="color: #9696a5; font-size: 12px; text-align: center;">Если вы не регистрировались в сервисе Contentik AI, просто удалите это письмо.</p>
             </div>
           </body>
         </html>
@@ -89,66 +44,22 @@ class MailService {
     await this.transporter.sendMail({
       from: process.env.SMTP_USER,
       to,
-      subject: 'Contentik | Восстановление доступа',
+      subject: 'Contentik AI | Восстановление доступа',
       text: '',
       html: `
         <html>
           <head>
-            <link rel="preconnect" href="https://fonts.googleapis.com" />
-            <link rel="preconnect" href="https://fonts.gstatic.com" />
-            <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600&display=swap" rel="stylesheet" />
-            <meta name="color-scheme" content="light dark"> <meta name="supported-color-schemes" content="light dark"> 
+            <meta name="viewport" content="width=device-width, initial-scale=1.0" />
           </head>
-          <style>
-            :root {
-              color-scheme: light dark;
-              supported-color-schemes: light dark;
-            }
-
-            .activateButton {
-              background: #000000 !important;
-              color: #FFFFFF !important;
-              padding: 10px;
-              border-radius: 10px;
-              outline: none;
-              border: none;
-              cursor: pointer;
-            }
-
-            @media (prefers-color-scheme: dark) {
-              .activateButton.dark {
-                background: #FFFFFF !important;
-                color: #000000 !important;
-                padding: 10px;
-                border-radius: 10px;
-                outline: none;
-                border: none;
-                cursor: pointer;
-              }
-
-              h1,
-              h2,
-              p,
-              span,
-              a,
-              b {
-                color: #ffffff !important;
-              }
-            }
-          </style>
-          <body style="background-color: rgb(16, 16, 18); color: rgb(255, 255, 255); font-family: 'Rubik', sans-serif !important; padding: 50px">
-            <div style="display: flex; align-items: center; justify-content: center; flex-direction: column; width: 100%">
-              <div style="display: flex; align-items: center; gap: 15px; width: 100%; margin-bottom: 15px">
-                <img width="30" height="30" src="https://blackraydev.github.io/contentik-ai-landing/img/logo.png">
-                <h2>Contentik</h2>
+          <body style="color: #ffffff; font-family: Arial, sans-serif; margin: 0;">
+            <div style="background-color: #101012; border-radius: 30px; padding: 25px; text-align: center; max-width: 600px; margin: 0 auto;">
+              <div style="display: flex; justify-content: center; margin-bottom: 15px;">
+                <img src="https://contentik-ai.ru/img/logo.png" alt="Contentik AI Logo" width="24" height="24" style="display: block; background: #24242A; padding: 8px; border-radius: 10px;">
+                <h2 style="margin: 0; color: #ffffff; margin-left: 10px; margin-top: 7px;">Contentik AI</h2>
               </div>
-
-              <p style="font-size: 12px; text-align: center">Нажмите на эту кнопку, чтобы перейти на страницу восстановления доступа к вашему аккаунту</p>
-              <a href="${link}" style="margin-bottom: 20px; border-radius: 10px; outline: none; border: none; text-decoration: none">
-                <button class="activateButton dark">Восстановить доступ</button>
-              </a>
-
-              <p style="color: rgb(150, 150, 165); font-size: 10px; text-align: center">Если вы не пытались восстановить доступ в сервисе Contentik, просто
+              <p style="font-size: 14px; font-weight: 500; text-align: center; color: #ffffff;">Нажмите на эту кнопку, чтобы перейти на страницу восстановления доступа к вашему аккаунту</p>
+              <a href="${link}" style="display: inline-block; background: #FFFFFF; color: #000000; font-size: 14px; padding: 10px 15px; border-radius: 10px; text-decoration: none; margin-bottom: 20px;">Восстановить доступ</a>
+              <p style="color: #9696a5; font-size: 12px; text-align: center;">Если вы не пытались восстановить доступ в сервисе Contentik, просто
                 удалите это письмо.</p>
             </div>
           </body>

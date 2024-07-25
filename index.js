@@ -31,7 +31,11 @@ app.use(express.json());
 app.use(bodyParser.json());
 app.use(cookieParser());
 app.use((req, res, next) => {
-  const corsWhiteList = ['https://contentik-ai.ru'];
+  const corsWhiteList = [
+    'https://contentik-ai.ru',
+    'https://localhost:5173',
+    'http://localhost:5173',
+  ];
 
   if (corsWhiteList.includes(req.headers.origin)) {
     res.setHeader('Access-Control-Allow-Origin', req.headers.origin);

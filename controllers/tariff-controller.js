@@ -12,18 +12,6 @@ class TariffController {
     }
   }
 
-  async purchaseTariff(req, res, next) {
-    try {
-      const { newPlan } = req.body;
-      const { id: userId } = req.user;
-      const tariff = await tariffService.purchaseTariff(userId, newPlan);
-
-      return res.json(tariff);
-    } catch (e) {
-      next(e);
-    }
-  }
-
   async checkoutTariff(req, res, next) {
     try {
       const { newPlan } = req.body;
@@ -36,6 +24,7 @@ class TariffController {
     }
   }
 
+  // Добавить проверку на IP-адрес, чтобы убедиться, что запрос прислала ЮКасса, а не пользователь
   async tariffWebhook(req, res, next) {
     try {
       const { event, object } = req.body;
@@ -44,7 +33,10 @@ class TariffController {
         payment_method: { id: paymentMethodId, saved: isPaymentMethodSaved },
       } = object;
 
+      console.log(req);
+
       if (event === 'payment.succeeded') {
+        console.log(req.body);
         await tariffService.purchaseTariff(
           userId,
           newPlan,
