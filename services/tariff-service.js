@@ -164,7 +164,7 @@ class TariffService {
           console.log('Subscription cancelled');
 
           await tariff.save();
-        } else {
+        } else if (tariff.paymentMethodId) {
           const {
             data: {
               payment_method: { id: paymentMethodId },
@@ -196,7 +196,7 @@ class TariffService {
               },
             },
           );
-          console.log(status)
+          console.log(status);
           if (status === 'succeeded') {
             console.log('Subscription payed manually');
             await this.purchaseTariff(tariff.userId, tariff.plan, paymentMethodId);
