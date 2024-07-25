@@ -196,7 +196,7 @@ class TariffService {
               },
             },
           );
-
+          console.log(status)
           if (status === 'succeeded') {
             console.log('Subscription payed manually');
             await this.purchaseTariff(tariff.userId, tariff.plan, paymentMethodId);
