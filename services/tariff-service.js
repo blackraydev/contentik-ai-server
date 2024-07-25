@@ -81,15 +81,19 @@ class TariffService {
   async useTariff(userId, mode) {
     const tariff = await Tariff.findOne({ where: { userId } });
 
+    if (tariff.isExpired) {
+      throw ApiError.PaymentRequired('Подписка истекла 😔');
+    }
+
     if (mode === 'create') {
       if (tariff.creations <= 0) {
-        throw ApiError.PaymentRequired('Лимит созданий исчерпан');
+        throw ApiError.PaymentRequired('Лимит созданий исчерпан 😔');
       }
 
       tariff.creations -= 1;
     } else {
       if (tariff.edits <= 0) {
-        throw ApiError.PaymentRequired('Лимит редактирований исчерпан');
+        throw ApiError.PaymentRequired('Лимит редактирований исчерпан 😔');
       }
 
       tariff.edits -= 1;
@@ -161,16 +165,10 @@ class TariffService {
         if (!tariff.paymentMethodId && !tariff.isExpired) {
           tariff.isExpired = true;
 
-          console.log('Subscription cancelled', 1);
-
           await tariff.save();
         } else if (tariff.paymentMethodId) {
           const {
-            // data: {
-            //   payment_method: { id: paymentMethodId },
-            //   status,
-            // },
-            data,
+            data: { status },
           } = await axios.post(
             'https://api.yookassa.ru/v3/payments',
             {
@@ -198,21 +196,10 @@ class TariffService {
             },
           );
 
-          const {
-            payment_method: { id: paymentMethodId },
-            status,
-          } = data;
-
-          console.log(data)
-
-          if (status === 'succeeded') {
-            console.log('Subscription payed manually');
-            await this.purchaseTariff(tariff.userId, tariff.plan, paymentMethodId);
-          } else {
+          // Платеж не прошел = подписка просрочена и ограничена
+          if (status !== 'succeeded') {
             tariff.paymentMethodId = null;
             tariff.isExpired = true;
-
-            console.log('Subscription cancelled', 2);
 
             await tariff.save();
           }

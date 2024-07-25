@@ -33,10 +33,7 @@ class TariffController {
         payment_method: { id: paymentMethodId, saved: isPaymentMethodSaved },
       } = object;
 
-      console.log('webhook', event, object);
-
       if (event === 'payment.succeeded') {
-        console.log('Automatic paying', new Date());
         await tariffService.purchaseTariff(
           userId,
           newPlan,
