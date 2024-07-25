@@ -32,7 +32,7 @@ class MailService {
               </div>
               <p style="font-size: 14px; font-weight: 500; text-align: center; color: #ffffff;">Нажмите на эту кнопку - и ваша почта будет подтверждена</p>
               <a href="${link}" style="display: inline-block; background: #FFFFFF; color: #000000; font-size: 14px; padding: 10px 15px; border-radius: 10px; text-decoration: none; margin-bottom: 20px;">Подтвердить почту</a>
-              <p style="color: #9696a5; font-size: 12px; text-align: center;">Если вы не регистрировались в сервисе Contentik AI, просто удалите это письмо.</p>
+              <p style="color: #9696a5; font-size: 12px; text-align: center;">Если вы не регистрировались в сервисе Contentik AI, просто удалите это письмо</p>
             </div>
           </body>
         </html>
@@ -60,7 +60,7 @@ class MailService {
               <p style="font-size: 14px; font-weight: 500; text-align: center; color: #ffffff;">Нажмите на эту кнопку, чтобы перейти на страницу восстановления доступа к вашему аккаунту</p>
               <a href="${link}" style="display: inline-block; background: #FFFFFF; color: #000000; font-size: 14px; padding: 10px 15px; border-radius: 10px; text-decoration: none; margin-bottom: 20px;">Восстановить доступ</a>
               <p style="color: #9696a5; font-size: 12px; text-align: center;">Если вы не пытались восстановить доступ в сервисе Contentik, просто
-                удалите это письмо.</p>
+                удалите это письмо</p>
             </div>
           </body>
         </html>
