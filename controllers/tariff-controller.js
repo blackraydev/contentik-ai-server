@@ -24,7 +24,7 @@ class TariffController {
     }
   }
 
-  // Добавить проверку на IP-адрес, чтобы убедиться, что запрос прислала ЮКасса, а не пользователь
+  // TODO: Добавить проверку на IP-адрес, чтобы убедиться, что запрос прислала ЮКасса, а не пользователь
   async tariffWebhook(req, res, next) {
     try {
       const { event, object } = req.body;
@@ -33,13 +33,14 @@ class TariffController {
         payment_method: { id: paymentMethodId, saved: isPaymentMethodSaved },
       } = object;
 
-      if (event === 'payment.succeeded') {
+      console.log(req.headers['x-real-ip'], req.connection, req.connection.remoteAddress);
+
+      if (event === 'payment.succeeded' && userId && newPlan) {
         await tariffService.purchaseTariff(
           userId,
           newPlan,
           isPaymentMethodSaved ? paymentMethodId : null,
         );
-        console.log('Automatic paying successfully', new Date());
       }
 
       return res.status(200).end();
