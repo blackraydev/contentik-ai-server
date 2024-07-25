@@ -33,6 +33,8 @@ class TariffController {
         payment_method: { id: paymentMethodId, saved: isPaymentMethodSaved },
       } = object;
 
+      console.log(event, object);
+
       console.log('Automatic paying', new Date());
 
       if (event === 'payment.succeeded') {
