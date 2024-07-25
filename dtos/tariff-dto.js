@@ -6,7 +6,7 @@ class TariffDto {
     this.edits = model.edits;
     this.startAt = model.startAt;
     this.endAt = model.endAt;
-    this.paymentMethodId = model.paymentMethodId;
+    this.hasSubscription = Boolean(model.paymentMethodId);
     this.isExpired = model.isExpired;
   }
 }

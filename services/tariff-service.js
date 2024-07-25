@@ -100,7 +100,9 @@ class TariffService {
     }
 
     tariff.save();
-    return tariff;
+
+    const tariffDto = new TariffDTO(tariff);
+    return tariffDto;
   }
 
   async checkoutTariff(userId, newPlan) {
@@ -215,7 +217,11 @@ class TariffService {
   async declineSubscriptionTariff(userId) {
     const tariff = await Tariff.findOne({ where: { userId } });
     tariff.paymentMethodId = null;
-    return await tariff.save();
+    await tariff.save();
+
+    const tariffDto = new TariffDTO(tariff);
+
+    return tariffDto;
   }
 }
 

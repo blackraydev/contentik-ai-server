@@ -1,5 +1,11 @@
 const tariffService = require('../services/tariff-service');
 
+const whiteList = ['77.75.153.78', '77.75.154.206'];
+
+const getIpAddress = (req) => {
+  return req.headers['x-real-ip'] || req.headers['x-forwarded-for'] || req.socket.remoteAddress;
+};
+
 class TariffController {
   async getTariff(req, res, next) {
     try {
@@ -24,7 +30,6 @@ class TariffController {
     }
   }
 
-  // TODO: Добавить проверку на IP-адрес, чтобы убедиться, что запрос прислала ЮКасса, а не пользователь
   async tariffWebhook(req, res, next) {
     try {
       const { event, object } = req.body;
@@ -33,17 +38,12 @@ class TariffController {
         payment_method: { id: paymentMethodId, saved: isPaymentMethodSaved },
       } = object;
 
-      console.log(
-        req.headers['cf-connecting-ip'],
-        req.headers['x-real-ip'],
-        req.headers['x-forwarded-for'],
-        req.socket.remoteAddress,
-        req.connection.remoteAddress,
-        req.ip,
-        req.ips,
-      );
+      const ip = getIpAddress(req);
+      const isWhiteListedIp = whiteList.includes(ip);
+      const isHasPayload = userId && newPlan;
+      const isPaymentSucceeded = event === 'payment.succeeded';
 
-      if (event === 'payment.succeeded' && userId && newPlan) {
+      if (isWhiteListedIp && isPaymentSucceeded && isHasPayload) {
         await tariffService.purchaseTariff(
           userId,
           newPlan,
@@ -60,8 +60,8 @@ class TariffController {
   async declineSubscriptionTariff(req, res, next) {
     try {
       const { id: userId } = req.user;
-      await tariffService.declineSubscriptionTariff(userId);
-      return res.status(200).end();
+      const tariff = await tariffService.declineSubscriptionTariff(userId);
+      return res.json(tariff);
     } catch (e) {
       next(e);
     }
