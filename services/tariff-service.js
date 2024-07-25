@@ -161,15 +161,16 @@ class TariffService {
         if (!tariff.paymentMethodId && !tariff.isExpired) {
           tariff.isExpired = true;
 
-          console.log('Subscription cancelled');
+          console.log('Subscription cancelled', 1);
 
           await tariff.save();
         } else if (tariff.paymentMethodId) {
           const {
-            data: {
-              payment_method: { id: paymentMethodId },
-              status,
-            },
+            // data: {
+            //   payment_method: { id: paymentMethodId },
+            //   status,
+            // },
+            data,
           } = await axios.post(
             'https://api.yookassa.ru/v3/payments',
             {
@@ -196,7 +197,14 @@ class TariffService {
               },
             },
           );
-          console.log(status);
+
+          const {
+            payment_method: { id: paymentMethodId },
+            status,
+          } = data;
+
+          console.log(data)
+
           if (status === 'succeeded') {
             console.log('Subscription payed manually');
             await this.purchaseTariff(tariff.userId, tariff.plan, paymentMethodId);
@@ -204,7 +212,7 @@ class TariffService {
             tariff.paymentMethodId = null;
             tariff.isExpired = true;
 
-            console.log('Subscription cancelled');
+            console.log('Subscription cancelled', 2);
 
             await tariff.save();
           }
