@@ -34,9 +34,9 @@ class TariffController {
       } = object;
 
       console.log(
-        req.header['cf-connecting-ip'],
-        req.header['x-real-ip'],
-        req.header['x-forwarded-for'],
+        req.headers['cf-connecting-ip'],
+        req.headers['x-real-ip'],
+        req.headers['x-forwarded-for'],
         req.socket.remoteAddress,
         req.connection.remoteAddress,
         req.ip,
