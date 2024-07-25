@@ -33,7 +33,15 @@ class TariffController {
         payment_method: { id: paymentMethodId, saved: isPaymentMethodSaved },
       } = object;
 
-      console.log(req.ip, req.ips);
+      console.log(
+        req.header['cf-connecting-ip'],
+        req.header['x-real-ip'],
+        req.header['x-forwarded-for'],
+        req.socket.remoteAddress,
+        req.connection.remoteAddress,
+        req.ip,
+        req.ips,
+      );
 
       if (event === 'payment.succeeded' && userId && newPlan) {
         await tariffService.purchaseTariff(

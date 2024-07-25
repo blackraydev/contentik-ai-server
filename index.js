@@ -49,7 +49,6 @@ app.use((req, res, next) => {
 
   next();
 });
-app.set('trust proxy', true);
 app.use('/api', router);
 app.use(errorMiddleware);
 
