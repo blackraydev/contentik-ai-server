@@ -144,9 +144,6 @@ class TariffService {
     try {
       const tariffs = await Tariff.findAll({
         where: {
-          paymentMethodId: {
-            [Op.not]: null,
-          },
           plan: {
             [Op.not]: 'trial',
           },
@@ -160,49 +157,57 @@ class TariffService {
         const tariff = tariffs[i];
         const { value, description } = getTariffDetails(tariff.plan, true);
 
-        const {
-          data: {
-            payment_method: { id: paymentMethodId },
-            cancellation_details: cancellationDetails,
-          },
-        } = await axios.post(
-          'https://api.yookassa.ru/v3/payments',
-          {
-            amount: {
-              value,
-              currency: 'RUB',
-            },
-            capture: true,
-            payment_method_id: tariff.paymentMethodId,
-            description,
-            metadata: {
-              userId: tariff.userId,
-              newPlan: tariff.plan,
-            },
-          },
-          {
-            auth: {
-              username: process.env.YOOMONEY_SHOP_ID,
-              password: process.env.YOOMONEY_SECRET_KEY,
-            },
-            headers: {
-              'Idempotence-Key': uuid.v4(),
-              'Content-Type': 'application/json',
-            },
-          },
-        );
-
-        if (cancellationDetails?.reason === 'permission_revoked') {
-          tariff.paymentMethodId = null;
+        // Если отключено автопродление = подписка просрочена и ограничена
+        if (!tariff.paymentMethodId) {
           tariff.isExpired = true;
 
           console.log('Subscription cancelled');
 
           await tariff.save();
-        // TODO: Возможно нужно убрать else
         } else {
-          console.log('Subscription payed manually');
-          await this.purchaseTariff(tariff.userId, tariff.plan, paymentMethodId);
+          const {
+            data: {
+              payment_method: { id: paymentMethodId },
+              status,
+            },
+          } = await axios.post(
+            'https://api.yookassa.ru/v3/payments',
+            {
+              amount: {
+                value,
+                currency: 'RUB',
+              },
+              capture: true,
+              payment_method_id: tariff.paymentMethodId,
+              description,
+              metadata: {
+                userId: tariff.userId,
+                newPlan: tariff.plan,
+              },
+            },
+            {
+              auth: {
+                username: process.env.YOOMONEY_SHOP_ID,
+                password: process.env.YOOMONEY_SECRET_KEY,
+              },
+              headers: {
+                'Idempotence-Key': uuid.v4(),
+                'Content-Type': 'application/json',
+              },
+            },
+          );
+
+          if (status === 'succeeded') {
+            console.log('Subscription payed manually');
+            await this.purchaseTariff(tariff.userId, tariff.plan, paymentMethodId);
+          } else {
+            tariff.paymentMethodId = null;
+            tariff.isExpired = true;
+
+            console.log('Subscription cancelled');
+
+            await tariff.save();
+          }
         }
       }
 
