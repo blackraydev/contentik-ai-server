@@ -37,7 +37,7 @@ app.use((req, res, next) => {
 
   next();
 });
-app.use('/api', router);
+app.use('/', router);
 app.use(errorMiddleware);
 
 const httpServer = http.createServer(app);
