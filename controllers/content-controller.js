@@ -14,10 +14,15 @@ class ContentController {
       let resultContent = '';
 
       for await (const chunk of contentStream) {
-        const [choice] = chunk.choices;
-        const { content } = choice.delta;
-        resultContent += content;
-        res.write(content);
+        if (chunk && chunk.choices && chunk.choices.length > 0) {
+          const [choice] = chunk.choices;
+          const { content } = choice.delta;
+
+          if (content) {
+            resultContent += content;
+            res.write(content);
+          }
+        }
       }
 
       await contentService.saveContent({

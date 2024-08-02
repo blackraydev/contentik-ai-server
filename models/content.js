@@ -20,7 +20,7 @@ module.exports = (sequelize) => {
       type: DataTypes.STRING,
     },
     text: {
-      type: DataTypes.STRING(2000),
+      type: DataTypes.STRING(15000),
     },
     contentType: {
       type: DataTypes.STRING,
@@ -42,7 +42,7 @@ module.exports = (sequelize) => {
       allowNull: false,
     },
     content: {
-      type: DataTypes.STRING(2000),
+      type: DataTypes.STRING(32000),
     },
   });
 

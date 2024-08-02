@@ -19,7 +19,7 @@ class MailService {
     await this.transporter.sendMail({
       from: process.env.SMTP_USER,
       to,
-      subject: 'Contentik AI | Подтверждение регистрации',
+      subject: 'Подтверждение регистрации | Contentik AI',
       text: '',
       html: getActivationTemplate(link),
     });
@@ -29,7 +29,7 @@ class MailService {
     await this.transporter.sendMail({
       from: process.env.SMTP_USER,
       to,
-      subject: 'Contentik AI | Восстановление доступа',
+      subject: 'Восстановление доступа | Contentik AI',
       text: '',
       html: getPasswordResetTemplate(link),
     });

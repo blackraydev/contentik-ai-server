@@ -2,8 +2,8 @@ const OpenAI = require('openai');
 const { Content } = require('../models');
 
 const openai = new OpenAI({
-  baseURL: 'https://api.pawan.krd/cosmosrp/v1',
-  apiKey: 'pk-mpBqmFMXCiIqTzlAljAOtTovVEhwIORNVyKjuXgtGemazKCV',
+  baseURL: 'https://api.proxyapi.ru/openai/v1',
+  apiKey: process.env.OPENAI_API_KEY,
 });
 
 class ContentService {
@@ -79,7 +79,7 @@ class ContentService {
         },
         { role: 'user', content: getPrompt() },
       ],
-      model: 'gpt-3.5-turbo',
+      model: 'gpt-4o-mini',
       stream: true,
     });
   }
