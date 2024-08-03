@@ -307,8 +307,8 @@ class UserService {
     return userDto;
   }
 
-  async loginYandex(code) {
-    if (!code) {
+  async loginYandex(code, deviceId) {
+    if (!code || !deviceId) {
       throw ApiError.UnauthorizedError();
     }
 
@@ -322,6 +322,8 @@ class UserService {
         client_id: process.env.YANDEX_CLIENT_ID,
         client_secret: process.env.YANDEX_CLIENT_SECRET,
         redirect_uri: process.env.CLIENT_URL,
+        device_id: process.env.YANDEX_DEVICE_ID,
+        device_name: deviceId,
       },
       {
         headers: {
@@ -372,13 +374,13 @@ class UserService {
     const userDto = new UserDto(user);
 
     const tokens = { accessToken, refreshToken };
-    await tokenService.saveToken(userDto.id, refreshToken);
+    await tokenService.saveToken(userDto.id, refreshToken, deviceId);
 
     return { ...tokens, user: userDto };
   }
 
-  async refreshYandex(refreshToken) {
-    if (!refreshToken) {
+  async refreshYandex(refreshToken, deviceId) {
+    if (!refreshToken || !deviceId) {
       throw ApiError.UnauthorizedError();
     }
 
@@ -391,6 +393,8 @@ class UserService {
         refresh_token: refreshToken,
         client_id: process.env.YANDEX_CLIENT_ID,
         client_secret: process.env.YANDEX_CLIENT_SECRET,
+        device_id: process.env.YANDEX_DEVICE_ID,
+        device_name: deviceId,
       },
       {
         headers: {
@@ -419,7 +423,7 @@ class UserService {
       refreshToken: newRefreshToken,
     };
 
-    await tokenService.saveToken(userDto.id, tokens.refreshToken);
+    await tokenService.saveToken(userDto.id, tokens.refreshToken, deviceId);
 
     return { ...tokens, user: userDto };
   }

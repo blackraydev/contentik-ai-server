@@ -217,10 +217,16 @@ class UserController {
 
   async loginYandex(req, res, next) {
     try {
-      const { code } = req.body;
-      const { user, refreshToken, accessToken } = await userService.loginYandex(code);
+      const { code, deviceId } = req.body;
+      const { user, refreshToken, accessToken } = await userService.loginYandex(code, deviceId);
 
       res.cookie('refreshToken', refreshToken, {
+        maxAge: 7 * 24 * 60 * 60 * 1000,
+        httpOnly: true,
+        sameSite: 'none',
+        secure: true,
+      });
+      res.cookie('deviceId', deviceId, {
         maxAge: 7 * 24 * 60 * 60 * 1000,
         httpOnly: true,
         sameSite: 'none',
@@ -235,14 +241,20 @@ class UserController {
 
   async refreshYandex(req, res, next) {
     try {
-      const { refreshToken } = req.cookies;
+      const { refreshToken, deviceId } = req.cookies;
       const {
         user,
         accessToken,
         refreshToken: newRefreshToken,
-      } = await userService.refreshYandex(refreshToken);
+      } = await userService.refreshYandex(refreshToken, deviceId);
 
       res.cookie('refreshToken', newRefreshToken, {
+        maxAge: 7 * 24 * 60 * 60 * 1000,
+        httpOnly: true,
+        sameSite: 'none',
+        secure: true,
+      });
+      res.cookie('deviceId', deviceId, {
         maxAge: 7 * 24 * 60 * 60 * 1000,
         httpOnly: true,
         sameSite: 'none',
@@ -262,6 +274,7 @@ class UserController {
       await userService.logoutYandex(refreshToken);
 
       res.clearCookie('refreshToken');
+      res.clearCookie('deviceId');
 
       return res.status(204).end();
     } catch (e) {
