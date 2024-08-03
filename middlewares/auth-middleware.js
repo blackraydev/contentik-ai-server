@@ -56,6 +56,7 @@ const authMiddleware = async function (req, _, next) {
       userData = await userService.getYandexUser(yandexUserId);
     } else {
       userData = tokenService.validateAccessToken(accessToken);
+      console.log(accessToken, userData)
     }
 
     if (!userData) {
