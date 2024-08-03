@@ -5,17 +5,12 @@ const userService = require('../services/user-service');
 
 const authMiddleware = async function (req, _, next) {
   try {
-    console.log('\n\n\n')
     const authorizationHeader = req.headers.authorization;
-    console.log(authorizationHeader)
     if (!authorizationHeader) {
       return next(ApiError.UnauthorizedError());
     }
 
     const accessToken = authorizationHeader.split(' ')[1];
-
-    console.log(accessToken)
-
     if (!accessToken) {
       return next(ApiError.UnauthorizedError());
     }
@@ -61,7 +56,6 @@ const authMiddleware = async function (req, _, next) {
       userData = await userService.getYandexUser(yandexUserId);
     } else {
       userData = tokenService.validateAccessToken(accessToken);
-      console.log(accessToken, userData)
     }
 
     if (!userData) {
@@ -71,7 +65,6 @@ const authMiddleware = async function (req, _, next) {
     req.user = userData;
     next();
   } catch (e) {
-    console.log(e)
     return next(ApiError.UnauthorizedError());
   }
 };

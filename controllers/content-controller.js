@@ -25,15 +25,11 @@ class ContentController {
         }
       }
 
-      console.log(resultContent);
-
-      const savedContent = await contentService.saveContent({
+      await contentService.saveContent({
         ...contentProps,
         content: resultContent,
         userId,
       });
-
-      console.log(savedContent);
 
       return res.end();
     } catch (e) {

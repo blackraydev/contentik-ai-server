@@ -22,7 +22,6 @@ app.use((req, res, next) => {
     'https://contentik-ai.ru',
     'https://app.contentik-ai.ru',
     'https://localhost:5173',
-    'https://192.168.0.102:5173',
   ];
 
   if (corsWhiteList.includes(req.headers.origin)) {
