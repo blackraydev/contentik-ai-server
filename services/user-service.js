@@ -164,9 +164,7 @@ class UserService {
       throw ApiError.UnauthorizedError();
     }
 
-    const {
-      data: { refresh_token: refreshToken, access_token: accessToken, user_id: vkUserId },
-    } = await axios.post(
+    const { data } = await axios.post(
       'https://id.vk.com/oauth2/auth',
       {
         client_id: process.env.VK_CLIENT_ID,
@@ -195,11 +193,10 @@ class UserService {
       },
     );
 
-    const {
-      data: {
-        user: { first_name: firstName, last_name: lastName, email, avatar, birthday },
-      },
-    } = await axios.post(
+    console.log(data);
+    const { refresh_token: refreshToken, access_token: accessToken, user_id: vkUserId } = data;
+
+    const { data: userData } = await axios.post(
       'https://id.vk.com/oauth2/user_info',
       {
         client_id: process.env.VK_CLIENT_ID,
@@ -216,6 +213,9 @@ class UserService {
         },
       },
     );
+
+    console.log(userData);
+    const { first_name: firstName, last_name: lastName, email, avatar, birthday } = userData;
 
     const [user, isCreated] = await User.findOrCreate({
       where: { email },
