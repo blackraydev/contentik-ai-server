@@ -8,7 +8,7 @@ const ApiError = require('../exceptions/api-error');
 const axios = require('axios');
 
 class UserService {
-  async registration(email, password) {
+  async registration(email, password, deviceId) {
     const candidate = await User.findOne({ where: { email } });
     if (candidate) {
       throw ApiError.BadRequest(`Пользователь с почтовым адресом ${email} уже существует`);
@@ -25,14 +25,14 @@ class UserService {
     );
 
     const userDto = new UserDto(user);
-    const tokens = tokenService.generateTokens({ ...userDto });
+    const tokens = tokenService.generateTokens({ ...userDto, deviceId });
 
-    await tokenService.saveToken(userDto.id, tokens.refreshToken);
+    await tokenService.saveToken(userDto.id, tokens.refreshToken, deviceId);
 
     return { ...tokens, user: userDto };
   }
 
-  async login(email, password) {
+  async login(email, password, deviceId) {
     const user = await User.findOne({ where: { email } });
     if (!user) {
       throw ApiError.BadRequest('Неверные имя пользователя или пароль');
@@ -44,9 +44,9 @@ class UserService {
     }
 
     const userDto = new UserDto(user);
-    const tokens = tokenService.generateTokens({ ...userDto });
+    const tokens = tokenService.generateTokens({ ...userDto, deviceId });
 
-    await tokenService.saveToken(userDto.id, tokens.refreshToken);
+    await tokenService.saveToken(userDto.id, tokens.refreshToken, deviceId);
 
     return { ...tokens, user: userDto };
   }
@@ -72,7 +72,7 @@ class UserService {
       throw ApiError.UnauthorizedError();
     }
 
-    const userData = await tokenService.validateRefreshToken(refreshToken);
+    const { deviceId, ...userData } = await tokenService.validateRefreshToken(refreshToken);
     const tokenFromDb = await tokenService.findToken(refreshToken);
 
     if (!userData || !tokenFromDb) {
@@ -81,9 +81,9 @@ class UserService {
 
     const user = await User.findByPk(userData.id);
     const userDto = new UserDto(user);
-    const tokens = tokenService.generateTokens({ ...userDto });
+    const tokens = tokenService.generateTokens({ ...userDto, deviceId });
 
-    await tokenService.saveToken(userDto.id, tokens.refreshToken);
+    await tokenService.saveToken(userDto.id, tokens.refreshToken, deviceId);
 
     return { ...tokens, user: userDto };
   }
