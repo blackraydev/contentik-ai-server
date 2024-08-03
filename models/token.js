@@ -14,7 +14,7 @@ module.exports = (sequelize) => {
       allowNull: false,
     },
     deviceId: {
-      type: DataTypes.STRING(100),
+      type: DataTypes.STRING(250),
     },
   });
 

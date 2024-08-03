@@ -244,7 +244,7 @@ class UserService {
     const userDto = new UserDto(user);
 
     const tokens = { accessToken, refreshToken };
-    await tokenService.saveToken(userDto.id, refreshToken);
+    await tokenService.saveToken(userDto.id, refreshToken, deviceId);
 
     return { ...tokens, user: userDto };
   }
@@ -290,7 +290,7 @@ class UserService {
       refreshToken: newRefreshToken,
     };
 
-    await tokenService.saveToken(userDto.id, tokens.refreshToken);
+    await tokenService.saveToken(userDto.id, tokens.refreshToken, deviceId);
 
     return { ...tokens, user: userDto };
   }
