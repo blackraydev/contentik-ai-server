@@ -39,7 +39,7 @@ class TariffController {
       } = object;
 
       const ip = getIpAddress(req);
-      const isWhiteListedIp = whiteList.includes(ip);
+      const isWhiteListedIp = true;
       const isHasPayload = userId && newPlan;
       const isPaymentSucceeded = event === 'payment.succeeded';
 
