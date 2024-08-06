@@ -43,6 +43,8 @@ class TariffController {
       const isHasPayload = userId && newPlan;
       const isPaymentSucceeded = event === 'payment.succeeded';
 
+      console.log(ip);
+
       if (isWhiteListedIp && isPaymentSucceeded && isHasPayload) {
         await tariffService.purchaseTariff(
           userId,
