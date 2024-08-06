@@ -14,28 +14,28 @@ module.exports = (sequelize) => {
       allowNull: false,
     },
     topic: {
-      type: DataTypes.STRING,
+      type: DataTypes.STRING(150),
     },
     description: {
-      type: DataTypes.STRING,
+      type: DataTypes.STRING(1000),
     },
     text: {
-      type: DataTypes.STRING(15000),
+      type: DataTypes.STRING(10000),
     },
     contentType: {
-      type: DataTypes.STRING,
+      type: DataTypes.STRING(150),
     },
     targetAudience: {
-      type: DataTypes.STRING,
+      type: DataTypes.STRING(250),
     },
     keywords: {
-      type: DataTypes.STRING,
+      type: DataTypes.STRING(500),
     },
     style: {
-      type: DataTypes.STRING,
+      type: DataTypes.STRING(150),
     },
     tone: {
-      type: DataTypes.STRING,
+      type: DataTypes.STRING(150),
     },
     language: {
       type: DataTypes.STRING,
