@@ -15,7 +15,7 @@ module.exports = (sequelize) => {
       unique: true,
     },
     password: {
-      type: DataTypes.STRING,
+      type: DataTypes.STRING(1000),
     },
     isActivated: {
       type: DataTypes.BOOLEAN,
@@ -23,7 +23,7 @@ module.exports = (sequelize) => {
       defaultValue: false,
     },
     activationLink: {
-      type: DataTypes.STRING,
+      type: DataTypes.STRING(1000),
     },
     vkUserId: {
       type: DataTypes.BIGINT,
@@ -38,7 +38,7 @@ module.exports = (sequelize) => {
       type: DataTypes.STRING,
     },
     avatar: {
-      type: DataTypes.STRING,
+      type: DataTypes.STRING(1000),
     },
     birthday: {
       type: DataTypes.STRING,
