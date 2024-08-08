@@ -22,7 +22,7 @@ const getTariffDetails = (plan, isSubscription = false) => {
   }
   if (plan === 'expert') {
     return {
-      value: '1599.00',
+      value: '1299.00',
       description: `${prefix}: Эксперт`,
     };
   }
