@@ -16,7 +16,7 @@ const getTariffDetails = (plan, isSubscription = false) => {
   }
   if (plan === 'pro') {
     return {
-      value: '799.00',
+      value: '699.00',
       description: `${prefix}: Про`,
     };
   }
